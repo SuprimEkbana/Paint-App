@@ -1,6 +1,7 @@
 package com.np.suprimpoudel.paintapplication
 
 import android.content.ContentValues
+import android.content.Intent
 import android.graphics.Bitmap
 import android.graphics.Canvas
 import android.graphics.Paint
@@ -19,6 +20,7 @@ import androidx.appcompat.app.AppCompatActivity
 import androidx.databinding.DataBindingUtil
 import com.np.suprimpoudel.paintapplication.PaintView.Companion.colorList
 import com.np.suprimpoudel.paintapplication.PaintView.Companion.currentBrush
+import com.np.suprimpoudel.paintapplication.PaintView.Companion.mBitmap
 import com.np.suprimpoudel.paintapplication.PaintView.Companion.pathList
 import com.np.suprimpoudel.paintapplication.databinding.ActivityMainBinding
 import java.io.OutputStream
@@ -49,6 +51,7 @@ class MainActivity : AppCompatActivity(), View.OnClickListener {
             binding.imvRedStroke.id -> setRedStroke()
             binding.imvSaveIcon.id -> saveToDeviceStorage()
             binding.imvClearIcon.id -> clearScreen()
+            binding.imvAddImage.id -> addImageFromGallery()
         }
     }
 
@@ -59,6 +62,7 @@ class MainActivity : AppCompatActivity(), View.OnClickListener {
         binding.imvYellowStroke.setOnClickListener(this)
         binding.imvSaveIcon.setOnClickListener(this)
         binding.imvClearIcon.setOnClickListener(this)
+        binding.imvAddImage.setOnClickListener(this)
     }
 
     @RequiresApi(Build.VERSION_CODES.M)
@@ -86,7 +90,7 @@ class MainActivity : AppCompatActivity(), View.OnClickListener {
     }
 
     private fun saveToDeviceStorage() {
-        val b = convertViewToDrawable(binding.lltPaintArea)
+        val b = convertViewToDrawable(binding.rltPaintArea)
         val imageOutStream: OutputStream?
 
         val cv = ContentValues()
@@ -124,5 +128,27 @@ class MainActivity : AppCompatActivity(), View.OnClickListener {
         c.translate((-view.scrollX).toFloat(), (-view.scrollY).toFloat())
         view.draw(c)
         return b
+    }
+
+    private fun addImageFromGallery() {
+        val intent = Intent(Intent.ACTION_PICK, MediaStore.Images.Media.EXTERNAL_CONTENT_URI)
+        launcher.launch(intent)
+    }
+
+    private val launcher = registerForActivityResult(
+        StartActivityForResult()
+    ) { result: ActivityResult ->
+        if (result.resultCode == RESULT_OK
+            && result.data != null
+        ) {
+            val photoUri = result.data!!.data
+            val bitmap = MediaStore.Images.Media.getBitmap(this.contentResolver, photoUri)
+            setImageToCanvas(bitmap)
+        }
+    }
+
+    private fun setImageToCanvas(bitmap: Bitmap) {
+        mBitmap = bitmap
+        binding.ptvDrawArea.drawSomething()
     }
 }

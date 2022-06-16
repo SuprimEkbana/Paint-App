@@ -2,10 +2,7 @@ package com.np.suprimpoudel.paintapplication
 
 import android.annotation.SuppressLint
 import android.content.Context
-import android.graphics.Canvas
-import android.graphics.Color
-import android.graphics.Paint
-import android.graphics.Path
+import android.graphics.*
 import android.util.AttributeSet
 import android.view.MotionEvent
 import android.view.View
@@ -22,7 +19,10 @@ class PaintView @JvmOverloads constructor(
         val pathList = arrayListOf<Path>()
         val colorList = arrayListOf<Int>()
         var currentBrush = Color.BLACK
+        var mBitmap: Bitmap? = null
     }
+
+    private var mCanvas: Canvas? = null
 
     var params: ViewGroup.LayoutParams? = null
 
@@ -52,11 +52,16 @@ class PaintView @JvmOverloads constructor(
     }
 
     override fun onDraw(canvas: Canvas) {
-        super.onDraw(canvas)
-        canvas.drawColor(Color.WHITE)
+        mCanvas = canvas
+        super.onDraw(mCanvas)
+        mCanvas?.drawColor(Color.WHITE)
+        if (mBitmap != null) {
+            canvas?.drawBitmap(mBitmap!!, 0f, 0f, Paint())
+            invalidate()
+        }
         for (i in pathList.indices) {
             paintBrush.color = colorList[i]
-            canvas.drawPath(pathList[i], paintBrush)
+            mCanvas?.drawPath(pathList[i], paintBrush)
             invalidate()
         }
     }
@@ -72,5 +77,9 @@ class PaintView @JvmOverloads constructor(
             ViewGroup.LayoutParams.MATCH_PARENT,
             ViewGroup.LayoutParams.WRAP_CONTENT
         )
+    }
+
+    fun drawSomething() {
+        draw(mCanvas)
     }
 }

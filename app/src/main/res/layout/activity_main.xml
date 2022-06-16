@@ -54,8 +54,8 @@
                 android:src="@drawable/drawable_green_color" />
         </LinearLayout>
 
-        <LinearLayout
-            android:id="@+id/lltPaintArea"
+        <RelativeLayout
+            android:id="@+id/rltPaintArea"
             android:layout_width="match_parent"
             android:layout_height="0dp"
             android:background="@color/white"
@@ -68,7 +68,7 @@
                 android:id="@+id/ptvDrawArea"
                 android:layout_width="match_parent"
                 android:layout_height="match_parent" />
-        </LinearLayout>
+        </RelativeLayout>
 
         <LinearLayout
             android:id="@+id/lltBottomBar"
@@ -81,6 +81,14 @@
             app:layout_constraintBottom_toBottomOf="parent"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toStartOf="parent">
+
+            <ImageView
+                android:id="@+id/imvAddImage"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginHorizontal="10dp"
+                android:padding="5dp"
+                android:src="@drawable/ic_baseline_add_photo_alternate_24" />
 
             <ImageView
                 android:id="@+id/imvSaveIcon"
